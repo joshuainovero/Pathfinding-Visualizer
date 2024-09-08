@@ -1,0 +1,225 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz@6..12&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Nunito Sans', sans-serif;
+}
+
+.wrapper {
+    display: grid;
+    min-height: 100vh;
+    grid-template-areas: 
+        'header'
+        'grid-container';
+
+    grid-template-rows: 0.1fr 1fr;
+}
+
+.header-container {
+    display: grid;
+    padding: 20px;
+    grid-template-areas: 
+        'title options';
+    grid-template-columns: 0.28fr 1fr;
+    
+    background-color: #2E7D32;
+    grid-area: header;
+}
+
+.title-container {
+    grid-area: title;
+    margin: auto auto auto 25px;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #FFFF;
+}
+
+.options {
+    grid-area: options;
+}
+
+.options ul {
+    display: grid;
+    list-style: none;
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.options li {
+    text-align: left;
+}
+
+.options li button{
+    position: relative;
+}
+
+.drop-down {
+    position: absolute;
+    /* width: 170px; */
+    background-color: red;
+    /* margin-top: 16px; */;
+    display: none;
+    width: 100%;
+    top: 100%;
+    z-index: 999999;
+}
+
+.drop-down ul {
+    list-style: none;
+    display: flex; /* Set the display property to flex */
+    flex-direction: column; /* Set the flex-direction to column */
+}
+
+.drop-down li:hover {
+    background-color: blue;
+}
+
+.options button {
+    width: 170px;
+    height: 50px;
+    background-color: #5CBF4D;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    color: white;
+}
+
+.options button:hover {
+    background-color: #5cbf4d75;
+}
+
+.options i {
+    font-weight: bold;
+}
+
+.grid {
+    display: grid;
+    grid-area: grid-container;
+
+    grid-template-columns: repeat(auto-fill, 2%); /* 10 columns */
+    grid-template-rows: repeat(50, 4.5%); /* 10 rows */
+
+}
+
+.node {
+    background-color: white;
+    border: 1px solid #5CBF4D;
+    /* aspect-ratio: 1/1; */
+}
+
+@keyframes visitedColorChange {
+    from {
+      background-color: rgb(14, 31, 180);
+    }
+    to {
+      background-color: rgb(0, 204, 255);
+    }
+}
+
+@keyframes pathColorChange {
+    from {
+      background-color: rgb(255, 200, 0);
+    }
+    to {
+      background-color: rgb(255, 255, 100);
+    }
+}
+
+.blocked {
+    background-color: rgb(59, 58, 58);
+}
+
+.start {
+    background-color: rgb(34, 139, 34);
+}
+
+.target {
+    background-color: rgb(220, 20, 60);
+}
+
+.visited {
+    animation: visitedColorChange 1s forwards;
+}
+
+.path {
+    animation: pathColorChange 1s forwards;
+}
+
+@media only screen and (max-width: 1495px){
+    .title {
+        font-size: 24px;
+    }
+}
+
+@media only screen and (max-width: 1285px){
+    .options button {
+        width: 140px;
+        height: 40px;
+        font-size: 13px;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+
+    .options li {
+        text-align: center;
+    }
+    
+}
+
+@media only screen and (max-width: 1049px){
+    .header-container {
+        grid-template-areas: 
+            'title'
+            'options';
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .title-container {
+        margin: 0; /* Remove the existing margin */
+    }
+
+    .title {
+        font-size: 23px;
+        text-align: center; /* Center the text within the title */
+    }
+
+    .options {
+        margin-top: 15px; /* Adjust the top margin for spacing */
+    }
+
+    .options ul {
+        grid-template-columns: none;
+    }
+
+    .options li {
+        text-align: center;
+        padding-top: 5px;
+    }
+
+    .options button {
+        width: 500px;
+        height: 40px;
+        font-size: 13px;
+    }
+}
+
+@media only screen and (max-width: 545px) {
+    .options button {
+        width: 300px;
+    }
+}
+
+@media only screen and (max-width: 340px) {
+    .options button {
+        width: 220px;
+    }
+}
