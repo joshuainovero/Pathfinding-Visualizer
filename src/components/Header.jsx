@@ -8,7 +8,7 @@ const pfDisplayNames = Object.freeze({
     [Algorithms.AStar]: "A* Search"
 });
 
-const Header = ({handleSetPfAlgorithm, currentPfAlgorithm, handleVisualize}) => {
+const Header = ({handleSetPfAlgorithm, handleVisualizeButton, handleClearButton, currentPfAlgorithm}) => {
    
     const [displayAlgo, setDisplayAlgo] = useState('none');
 
@@ -37,10 +37,10 @@ const Header = ({handleSetPfAlgorithm, currentPfAlgorithm, handleVisualize}) => 
                         <button>Generate Maze <i className="fa fa-caret-down"></i></button>
                     </li>
                     <li>
-                        <button onClick={handleVisualize} id="Play">Play</button>
+                        <button onClick={handleVisualizeButton} id="Play">Play</button>
                     </li>
                     <li>
-                        <button id="Clear">Clear Board</button>
+                        <button onClick={handleClearButton} id="Clear">Clear Board</button>
                     </li>
                     <li>
                         <button>Speed <i className="fa fa-caret-down"></i></button>

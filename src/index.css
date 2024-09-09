@@ -19,7 +19,7 @@
 
 .header-container {
     display: grid;
-    padding: 20px;
+    padding-left: 20px;
     grid-template-areas: 
         'title options';
     grid-template-columns: 0.28fr 1fr;
@@ -41,6 +41,8 @@
 
 .options {
     grid-area: options;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .options ul {
@@ -51,6 +53,7 @@
 
 .options li {
     text-align: left;
+    color: white;
 }
 
 .options li button{
@@ -60,12 +63,13 @@
 .drop-down {
     position: absolute;
     /* width: 170px; */
-    background-color: red;
+    background-color: rgb(144, 238, 144);
     /* margin-top: 16px; */;
     display: none;
     width: 100%;
-    top: 100%;
+    top: 135%;
     z-index: 999999;
+    border-radius: 5px;
 }
 
 .drop-down ul {
@@ -74,22 +78,34 @@
     flex-direction: column; /* Set the flex-direction to column */
 }
 
+.drop-down li {
+    padding: 7px;
+    color: rgb(0, 100, 0);
+}
+
 .drop-down li:hover {
-    background-color: blue;
+    background-color: rgb(102, 205, 102);
 }
 
 .options button {
     width: 170px;
     height: 50px;
-    background-color: #5CBF4D;
+    /* background-color: #5CBF4D; */
+    background-color: transparent;
     border: none;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 16.5px;
+    font-weight: bold;
     color: white;
 }
 
+#Play {
+    background-color: #5CBF4D;
+}
+
 .options button:hover {
-    background-color: #5cbf4d75;
+    /* background-color: #5cbf4d75; */
+    color:#7eb91e
 }
 
 .options i {
@@ -134,11 +150,19 @@
 }
 
 .start {
-    background-color: rgb(34, 139, 34);
+    /* background-color: rgb(34, 139, 34); */
+    background-image: url('/public/start.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .target {
-    background-color: rgb(220, 20, 60);
+    /* background-color: rgb(220, 20, 60); */
+    background-image: url('/public/target.svg');
+    background-size: 90%;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .visited {
@@ -181,6 +205,8 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        padding-top: 20px;
+        padding-bottom: 20px;
     }
 
     .title-container {
