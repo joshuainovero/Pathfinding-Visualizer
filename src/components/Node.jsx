@@ -14,10 +14,15 @@ const stateClasses = Object.freeze({
 const Node = React.memo(({ row, col, currentState, handleNodeClick }) => {
     return (
         <div
-            className={`node ${stateClasses[currentState] || 'clear'}`}
+            className='node'
             id={`${row}-${col}`}
             onClick={() => handleNodeClick(row, col)}
-        ></div>
+        >
+            <div className={`nodeInner ${stateClasses[currentState] || 'clear'}`}>
+
+            </div>
+
+        </div>
     );
 });
 export default Node

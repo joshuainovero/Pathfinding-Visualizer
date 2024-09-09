@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Algorithms from '../enums/algorithms.js'
+import MazeAlgorithms from '../enums/mazeAlgorithms.js';
 
 const pfDisplayNames = Object.freeze({
     [Algorithms.DFS]: "Depth-First Search",
@@ -8,9 +9,14 @@ const pfDisplayNames = Object.freeze({
     [Algorithms.AStar]: "A* Search"
 });
 
-const Header = ({handleSetPfAlgorithm, handleVisualizeButton, handleClearButton, currentPfAlgorithm}) => {
+const mazeDisplayNames = Object.freeze({
+    [MazeAlgorithms.Recursive]: "Recursive Backtrack"
+});
+
+const Header = ({handleSetPfAlgorithm, handleSetMazeAlgorithm, handleVisualizeButton, handleClearButton, currentPfAlgorithm}) => {
    
     const [displayAlgo, setDisplayAlgo] = useState('none');
+    const [displayMazeAlgo, setDisplayMaze] = useState('none');
 
     return (
         <div className="header-container">
@@ -23,7 +29,7 @@ const Header = ({handleSetPfAlgorithm, handleVisualizeButton, handleClearButton,
                     <li>
                         <button onClick={() => setDisplayAlgo(prev => prev === 'none'? 'block': 'none')} id="choose-algorithm">
                             {pfDisplayNames[currentPfAlgorithm] || "Choose Algorithm"} <i className="fa fa-caret-down"></i>
-                            <div id="algorithm-dropdown" className="drop-down" style={{display: displayAlgo}}>
+                            <div className="drop-down" style={{display: displayAlgo}}>
                                 <ul>
                                     {Object.keys(Algorithms).map((algo) => 
                                     <li onClick={() => handleSetPfAlgorithm(algo)} key={algo}>
@@ -34,7 +40,17 @@ const Header = ({handleSetPfAlgorithm, handleVisualizeButton, handleClearButton,
                         </button>
                     </li>
                     <li>
-                        <button>Generate Maze <i className="fa fa-caret-down"></i></button>
+                        <button onClick={() => setDisplayMaze(prev => prev === 'none'? 'block': 'none')} id="choose-maze-algorithm"> 
+                            Generate Maze <i className="fa fa-caret-down"></i>
+                            <div className="drop-down" style={{display: displayMazeAlgo}}>
+                                    <ul>
+                                        {Object.keys(MazeAlgorithms).map((algo) => 
+                                        <li onClick={() => handleSetMazeAlgorithm(algo)} key={algo}>
+                                            {mazeDisplayNames[algo]}
+                                        </li>)}
+                                    </ul>
+                            </div>
+                        </button>
                     </li>
                     <li>
                         <button onClick={handleVisualizeButton} id="Play">Play</button>

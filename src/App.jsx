@@ -85,7 +85,7 @@ const App = () => {
                     const pathArray = visualizedData[1];
                                         
                     await animateVisitedNodes(visitedArray, 5);
-                    await animatePathNodes(pathArray, 20);
+                    await animatePathNodes(pathArray, 30);
     
                 } else {
                     alert("Choose an algorithm!");
@@ -251,13 +251,18 @@ const App = () => {
         }
     }
 
+    const executeMazeAlgo = (algo) => {
+        console.log(algo);
+    }
+
     return (
         <div className="wrapper">
             <Header 
             handleSetPfAlgorithm={(algo) => setPfAlgorithm(algo)} 
+            handleSetMazeAlgorithm={(algo) => executeMazeAlgo(algo)}
             handleVisualizeButton={() => handleVisualize(true)}
             handleClearButton={handleClearBoard}
-            currentPfAlgorithm={pfAlgorithm} 
+            currentPfAlgorithm={pfAlgorithm}
             />
             <Board 
             gridData={gridData}
