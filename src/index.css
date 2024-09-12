@@ -97,6 +97,7 @@
     font-size: 16.5px;
     font-weight: bold;
     color: white;
+    cursor: pointer;
 }
 
 #Play {
@@ -116,13 +117,13 @@
     display: grid;
     grid-area: grid-container;
 
-    grid-template-columns: repeat(auto-fill, 2%); /* 10 columns */
-    grid-template-rows: repeat(50, 4.5%); /* 10 rows */
+    grid-template-columns: repeat(auto-fill, 1.5%); /* 10 columns */
+    grid-template-rows: repeat(auto-fill, 3.5%); /* 10 rows */
 
 }
 
 .node {
-    border: 1px solid #5CBF4D;
+    border: 1px solid #5cbf4d8f;
     /* aspect-ratio: 1/1; */
 }
 
@@ -134,11 +135,12 @@
 
 @keyframes visitedSizeChange {
     from {
-      clip-path: circle(0% at 50% 50%); /* Start at 0% radius, centered */
+        background-color: rgb(14, 31, 180);
+        clip-path: circle(0% at 50% 50%); /* Start at 0% radius, centered */
     }
     to {
-     
-      clip-path: circle(100% at 50% 50%); /* Grow to cover entire element */
+        background-color: rgb(0, 204, 255);
+        clip-path: circle(100% at 50% 50%); /* Grow to cover entire element */
     }
 }
 
@@ -164,10 +166,11 @@
 
 @keyframes pathSizeChange {
     from {
+        background-color: rgb(255, 200, 0);
         clip-path: circle(0% at 50% 50%); /* Start at 0% radius, centered */
       }
       to {
-       
+        background-color: rgb(255, 255, 100);
         clip-path: circle(100% at 50% 50%); /* Grow to cover entire element */
       }
 }
@@ -204,11 +207,11 @@
 }
 
 .visited {
-    animation: visitedSizeChange 1.5s forwards, visitedColorChange 1.65s forwards;
+    animation: visitedSizeChange 1.5s forwards;
 }
 
 .path {
-    animation: pathSizeChange 1.5s forwards, pathColorChange 1.65s forwards
+    animation: pathSizeChange 1.5s forwards;
 }
 
 @media only screen and (max-width: 1495px){

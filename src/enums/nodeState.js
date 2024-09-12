@@ -1,9 +1,7 @@
-const NodeState = Object.freeze({
+const NodeState = {
     Start: "Start",
     Target: "Target",
-    Obstruction: "Obstruction",
-    Visited: "Visited",
-    Path: "Path"
-});
+    Obstruction: "Obstruction"
+};
 
-export default NodeState;
+export default NodeState

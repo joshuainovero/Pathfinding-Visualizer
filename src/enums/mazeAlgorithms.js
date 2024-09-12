@@ -1,5 +1,5 @@
-const MazeAlgorithms = Object.freeze({
+const MazeAlgorithms = {
     Recursive: "Recursive"
-});
+}
 
 export default MazeAlgorithms;

@@ -1,95 +1,68 @@
-import { useEffect, useState } from 'react';
-import NodeState from './enums/nodeState.js'
+import { useEffect, useState, useRef } from 'react';
+import MainTemplate from './components/MainTemplate.jsx'
 import Header from './components/Header.jsx'
 import Board from './components/Board.jsx'
-import BFS from './algorithms/bfs.js'
-import Dijkstra from './algorithms/dijkstra.js';
-import AStar from './algorithms/aStar.js'
-import DFS from './algorithms/dfs.js'
-import Algorithms from './enums/algorithms.js'
-
-const AlgorithmFunctions = Object.freeze({
-    [Algorithms.BFS]: (start, target, data) => {
-        return BFS(start, target, data);
-    },
-
-    [Algorithms.Dijkstra]: (start, target, data) => {
-        return Dijkstra(start, target, data);
-    },
-
-    [Algorithms.AStar]: (start, target, data) => {
-        return AStar(start, target, data);
-    },
-
-    [Algorithms.DFS]: (start, target, data) => {
-        return DFS(start, target, data);
-    }
-});
+import NodeState from './enums/nodeState.js'
+import AlgorithmFunctions from './utils/algorithmFunctions.js';
+import StateClasses from './utils/stateClasses.js'
+import BoardConfig from './configs/board.js'
+import board from './configs/board.js';
 
 const App = () => {
-    const [pfAlgorithm, setPfAlgorithm] = useState(null);
+    const [pfAlgorithm, setPfAlgorithm] = useState();
+    const [mazeAlgorithm, setMazeAlgorithm] = useState();
     const [visualizing, setVisualize] = useState(false);
     const [gridData, setGridData] = useState([]);
-    const [config, setConfig] = useState({
-        Rows: 0,
-        Cols: 0,
-        Start: null,
-        Target: null
-    });
+
+    const gridRef = useRef();
+    gridRef.current = Array.from({length: BoardConfig.rows}, (_, row) =>
+        Array.from({length: BoardConfig.cols}, (_, col) => useRef())
+    )
 
     useEffect(() => {
-        fetch('/config.json')
-            .then((response) => response.json())
-            .then((data) => {
-                
-                setGridData(() => {
-                    return Array.from({length: data.Rows}, (_, row) =>
-                        Array.from({length: data.Cols}, (_, col) => ({
-                            row: row,
-                            col: col,
-                            currentState: null,
-                            neighbors: []
-                        }))
-                    )
-                });   
-
-                setConfig(data);
-            })
-            .catch((error) => {
-                console.error('There was a problem with the fetch operation:', error);
-            });
-
+        setGridData(() => {
+            return Array.from({length: BoardConfig.rows}, (_, row) =>
+                Array.from({length: BoardConfig.cols}, (_, col) => ({
+                    row: row,
+                    col: col,
+                    currentState: (row == BoardConfig.start[0] && col == BoardConfig.start[1]) ? 
+                        NodeState.Start : (
+                        row == BoardConfig.target[0] && col == BoardConfig.target[1]) ? 
+                        NodeState.Target : null,
+                    neighbors: []
+                })) 
+            )
+        });
     }, []);
 
     useEffect(() => {
-        if (config.Start && config.Target) {
-            modifyNodeData(config.Start[0], config.Start[1], {
-                currentState: NodeState.Start
-            });
-        
-            modifyNodeData(config.Target[0], config.Target[1], {
-                currentState: NodeState.Target
-            });
-        }
-    }, [config]);
-
-    useEffect(() => {
         const asyncHandleVisualize = async () => {
-            if (visualizing) {
-                if (pfAlgorithm) {
-                    console.log(pfAlgorithm);
-                    clearVisualize();
-                    updateNeighbors();
-                    const visualizedData = AlgorithmFunctions[pfAlgorithm](getNodeFromState(NodeState.Start), getNodeFromState(NodeState.Target), gridData);
-                    const visitedArray = visualizedData[0];
-                    const pathArray = visualizedData[1];
-                                        
-                    await animateVisitedNodes(visitedArray, 5);
-                    await animatePathNodes(pathArray, 30);
-    
-                } else {
-                    alert("Choose an algorithm!");
-                }
+            if (!visualizing) {
+                return;
+            }
+
+            if (pfAlgorithm) {
+                clearVisualize();
+                updateNeighbors();
+
+                const startNode = getNodeFromState(NodeState.Start)
+                const targetNode = getNodeFromState(NodeState.Target)
+
+                const visualizedData = AlgorithmFunctions[pfAlgorithm](startNode, targetNode, gridData);
+                const visitedArray = visualizedData[0];
+                const pathArray = visualizedData[1];
+
+                visitedArray.unshift(startNode);
+                visitedArray.push(targetNode);
+
+                pathArray.push(startNode);
+                pathArray.unshift(targetNode);
+                                    
+                await animateVisitedNodes(visitedArray, 0);
+                await animatePathNodes(pathArray, 30);
+
+            } else {
+                alert("Choose an algorithm!");
             }
         
             handleVisualize(false);
@@ -98,13 +71,46 @@ const App = () => {
         asyncHandleVisualize();
     }, [visualizing]);
 
+    const modifyNodeData = (row, col, data) => {
+        setGridData(prevGridData => {
+            prevGridData[row][col] = { ...prevGridData[row][col], ...data };
+            return [...prevGridData]; 
+        });
+    }
+
+    const updateNeighbors = () => {
+        const directions = [
+            [1, 0], // down
+            [-1, 0], // up
+            [0, 1], // right
+            [0, -1] // left
+        ];
+
+        const getNeighbor = (row, col, direction) => {
+            const [dRow, dCol] = direction;
+            const newRow = row + dRow;
+            const newCol = col + dCol;
+
+            if (newRow >= 0 && newRow < BoardConfig.rows && newCol >= 0 && newCol < BoardConfig.cols) {
+                return gridData[newRow][newCol].currentState != NodeState.Obstruction? gridData[newRow][newCol]: null;
+            }
+         }
+
+         gridData.forEach((row, rowIndex) => {
+            row.forEach((nodeData, colIndex) => {
+                nodeData.neighbors = directions.map(dir => getNeighbor(rowIndex, colIndex, dir)).filter(Boolean);
+            });
+         });
+    }
+
+
     const animateVisitedNodes = async (visitedArray, delay) => {
         for (let i = 0; i < visitedArray.length; i++) {
-            const element = visitedArray[i];
+            const dataNode = visitedArray[i];
 
-            modifyNodeData(element.row, element.col, {
-                currentState: NodeState.Visited
-            });
+            const element = gridRef.current[dataNode.row][dataNode.col].current;
+
+            element.classList.add("visited");
 
             await new Promise(resolve => setTimeout(resolve, delay)); 
         }
@@ -112,11 +118,12 @@ const App = () => {
 
     const animatePathNodes = async (pathArray, delay) => {
         for (let i = pathArray.length - 1; i > 0; i--) {
-            const element = pathArray[i];
+      
+            const dataNode = pathArray[i];
 
-            modifyNodeData(element.row, element.col, {
-                currentState: NodeState.Path
-            });
+            const element = gridRef.current[dataNode.row][dataNode.col].current;
+
+            element.classList.add("path");
 
             await new Promise(resolve => setTimeout(resolve, delay)); 
         }
@@ -124,7 +131,6 @@ const App = () => {
 
     const handleVisualize = (state) => {
         if (visualizing && state) {
-            console.log("Already!");
             return;
         }
 
@@ -144,63 +150,30 @@ const App = () => {
         clearBoard();
     }
 
-    const modifyNodeData = (row, col, data) => {
-        setGridData(prevGridData => {
-            const newGridData = prevGridData.map(row => row.map(node => ({...node})));
-            newGridData[row][col] = {...newGridData[row][col], ...data};
-            return newGridData;
-        });
-    }
-
-    const updateNeighbors = () => {
-        const directions = [
-            [1, 0], // down
-            [-1, 0], // up
-            [0, 1], // right
-            [0, -1] // left
-        ];
-
-        const getNeighbor = (row, col, direction) => {
-            const [dRow, dCol] = direction;
-            const newRow = row + dRow;
-            const newCol = col + dCol;
-
-            if (newRow >= 0 && newRow < config.Rows && newCol >= 0 && newCol < config.Cols) {
-                return gridData[newRow][newCol].currentState != NodeState.Obstruction? gridData[newRow][newCol]: null;
-            }
-         }
-
-         gridData.forEach((row, rowIndex) => {
-            row.forEach((nodeData, colIndex) => {
-                nodeData.neighbors = directions.map(dir => getNeighbor(rowIndex, colIndex, dir)).filter(Boolean);
-            });
-         });
-    }
-
     const clearVisualize = () => {
-        for (let row = 0; row < config.Rows; row++){
-            for (let col = 0; col < config.Cols; col++){
-                if (gridData[row][col].currentState == NodeState.Visited || gridData[row][col].currentState == NodeState.Path) {
-                    modifyNodeData(row, col, {
-                        currentState: null
-                    })
-                }
-            }
-        }
+        Array.from({length: BoardConfig.rows}, (_, row) =>
+            Array.from({length: BoardConfig.cols}, (_, col) => {
+                const nodeRef = gridRef.current[row][col].current
+                nodeRef.classList.remove("visited");
+                nodeRef.classList.remove("path"); 
+        }));
     }
 
     const clearBoard = () => {
-        for (let row = 0; row < config.Rows; row++){
-            for (let col = 0; col < config.Cols; col++){
+        Array.from({length: BoardConfig.rows}, (_, row) =>
+            Array.from({length: BoardConfig.cols}, (_, col) => {
+                const nodeRef = gridRef.current[row][col].current
+                nodeRef.classList.remove("visited");
+                nodeRef.classList.remove("path");
+
                 if (gridData[row][col].currentState == NodeState.Start || gridData[row][col].currentState == NodeState.Target) {
-                    continue;
+                    return;
                 }
 
                 modifyNodeData(row, col, {
                     currentState: null
                 })
-            }
-        }
+        }));
     }
 
     const handleNodeClick = (row, col) => {
@@ -242,8 +215,8 @@ const App = () => {
         });
     }
     const getNodeFromState = (nodeState) => {
-        for (let row = 0; row < config.Rows; row++){
-            for (let col = 0; col < config.Cols; col++){
+        for (let row = 0; row < board.rows; row++){
+            for (let col = 0; col < BoardConfig.cols; col++){
                 if (gridData[row][col].currentState == nodeState){
                     return gridData[row][col];
                 }
@@ -251,24 +224,21 @@ const App = () => {
         }
     }
 
-    const executeMazeAlgo = (algo) => {
-        console.log(algo);
-    }
-
     return (
-        <div className="wrapper">
+        <MainTemplate>
             <Header 
-            handleSetPfAlgorithm={(algo) => setPfAlgorithm(algo)} 
-            handleSetMazeAlgorithm={(algo) => executeMazeAlgo(algo)}
-            handleVisualizeButton={() => handleVisualize(true)}
-            handleClearButton={handleClearBoard}
-            currentPfAlgorithm={pfAlgorithm}
+                handleSetPfAlgorithm={(algo) => setPfAlgorithm(algo)} 
+                handleSetMazeAlgorithm={(algo) => executeMazeAlgo(algo)}
+                handleVisualizeButton={() => handleVisualize(true)}
+                handleClearButton={handleClearBoard}
+                currentPfAlgorithm={pfAlgorithm}
             />
             <Board 
-            gridData={gridData}
-            handleNodeClick={handleNodeClick}
-            />
-        </div>
+                gridData={gridData}
+                handleNodeClick={handleNodeClick}
+                ref = {gridRef}
+            />   
+        </MainTemplate>
     )
 }
 

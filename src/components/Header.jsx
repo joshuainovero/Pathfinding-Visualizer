@@ -2,16 +2,16 @@ import { useState } from 'react'
 import Algorithms from '../enums/algorithms.js'
 import MazeAlgorithms from '../enums/mazeAlgorithms.js';
 
-const pfDisplayNames = Object.freeze({
+const pfDisplayNames = {
     [Algorithms.DFS]: "Depth-First Search",
     [Algorithms.BFS]: "Breadth-First Search",
     [Algorithms.Dijkstra]: "Dijkstra's Algorithm",
     [Algorithms.AStar]: "A* Search"
-});
+}
 
-const mazeDisplayNames = Object.freeze({
+const mazeDisplayNames = {
     [MazeAlgorithms.Recursive]: "Recursive Backtrack"
-});
+}
 
 const Header = ({handleSetPfAlgorithm, handleSetMazeAlgorithm, handleVisualizeButton, handleClearButton, currentPfAlgorithm}) => {
    

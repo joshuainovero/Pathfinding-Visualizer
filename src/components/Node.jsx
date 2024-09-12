@@ -1,28 +1,22 @@
-import React from 'react';
-import NodeState from '../enums/nodeState.js'
-import { useEffect } from 'react';
+import { forwardRef, memo } from 'react';
+import StateClasses from '../utils/stateClasses';
 
-const stateClasses = Object.freeze({
-    [NodeState.Start]: "start",
-    [NodeState.Target]: "target",
-    [NodeState.Obstruction]: "blocked",
-    [NodeState.Visited]: "visited",
-    [NodeState.Path]: "path"
-});
-
-
-const Node = React.memo(({ row, col, currentState, handleNodeClick }) => {
+const Node = memo( forwardRef( (props, ref ) => {
     return (
         <div
             className='node'
-            id={`${row}-${col}`}
-            onClick={() => handleNodeClick(row, col)}
+            id={`${props.row}-${props.col}`}
+            onClick={() => props.handleNodeClick(props.row, props.col)}
         >
-            <div className={`nodeInner ${stateClasses[currentState] || 'clear'}`}>
+            <div 
+                className={`nodeInner ${StateClasses[props.currentState] || 'clear'}`}
+                ref = {ref.current[props.row][props.col]}
+            >
 
             </div>
 
         </div>
     );
-});
+}));
+
 export default Node
