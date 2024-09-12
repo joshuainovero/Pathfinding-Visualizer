@@ -119,11 +119,14 @@
 
     grid-template-columns: repeat(auto-fill, 1.5%); /* 10 columns */
     grid-template-rows: repeat(auto-fill, 3.5%); /* 10 rows */
+    justify-content: center;
+    background-color: #5cbf4d4f;;
 
 }
 
 .node {
-    border: 1px solid #5cbf4d8f;
+    border: 1px solid #5cbf4d79;
+    background-color: white;
     /* aspect-ratio: 1/1; */
 }
 
