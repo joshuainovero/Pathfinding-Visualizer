@@ -6,7 +6,6 @@ import NodeState from './enums/nodeState.js'
 import AlgorithmFunctions from './utils/algorithmFunctions.js';
 import StateClasses from './utils/stateClasses.js'
 import BoardConfig from './configs/board.js'
-import board from './configs/board.js';
 
 const App = () => {
     const [pfAlgorithm, setPfAlgorithm] = useState();
@@ -215,7 +214,7 @@ const App = () => {
         });
     }
     const getNodeFromState = (nodeState) => {
-        for (let row = 0; row < board.rows; row++){
+        for (let row = 0; row < BoardConfig.rows; row++){
             for (let col = 0; col < BoardConfig.cols; col++){
                 if (gridData[row][col].currentState == nodeState){
                     return gridData[row][col];
