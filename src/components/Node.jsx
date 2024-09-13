@@ -6,7 +6,10 @@ const Node = memo( forwardRef( (props, ref ) => {
         <div
             className='node'
             id={`${props.row}-${props.col}`}
-            onClick={() => props.handleNodeClick(props.row, props.col)}
+            // onClick={() => props.handleNodeClick(props.row, props.col)}
+            onMouseDown={() => props.handleMouseDown(props.row, props.col)}
+            onMouseEnter={() => props.handleMouseEnter(props.row, props.col)}
+            onMouseUp={() => props.handleMouseUp(props.row, props.col)}
         >
             <div 
                 className={`nodeInner ${StateClasses[props.currentState] || 'clear'}`}

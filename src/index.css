@@ -189,7 +189,7 @@
 }
 
 .blocked {
-    background-color: rgb(59, 58, 58);
+    background-color: #1a4e1d;
     animation: obstructionSizeChange .5s forwards;
 }
 

@@ -3,7 +3,7 @@ import { forwardRef } from 'react'
 
 const Board = forwardRef( (props, ref) => {
     return (
-        <div className="grid">
+        <div onMouseLeave = {props.handleMouseUp} className="grid">
             {props.gridData.map((row, i) =>
                 row.map((nodeData, k) => (
                     <Node
@@ -13,6 +13,9 @@ const Board = forwardRef( (props, ref) => {
                         currentState={nodeData.currentState}
                         handleNodeClick={props.handleNodeClick}
                         ref = {ref}
+                        handleMouseDown = {props.handleMouseDown}
+                        handleMouseEnter = {props.handleMouseEnter}
+                        handleMouseUp = {props.handleMouseUp}
                     />
                 ))
             )}

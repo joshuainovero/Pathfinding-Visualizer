@@ -3,15 +3,20 @@ import MainTemplate from './components/MainTemplate.jsx'
 import Header from './components/Header.jsx'
 import Board from './components/Board.jsx'
 import NodeState from './enums/nodeState.js'
+import AlgoSpeed from './enums/algoSpeed.js';
+import AlgoSpeedValue from './utils/algoSpeedValue.js';
 import AlgorithmFunctions from './utils/algorithmFunctions.js';
-import StateClasses from './utils/stateClasses.js'
 import BoardConfig from './configs/board.js'
 
 const App = () => {
     const [pfAlgorithm, setPfAlgorithm] = useState();
     const [mazeAlgorithm, setMazeAlgorithm] = useState();
+    const [algoSpeed, setAlgoSpeed] = useState(BoardConfig.initialSpeed);
     const [visualizing, setVisualize] = useState(false);
     const [gridData, setGridData] = useState([]);
+    const [isMouseDown, setIsMouseDown] = useState(false);
+
+    const refAlgoSpeed = useRef(BoardConfig.initialSpeed);
 
     const gridRef = useRef();
     gridRef.current = Array.from({length: BoardConfig.rows}, (_, row) =>
@@ -50,14 +55,14 @@ const App = () => {
                 const visualizedData = AlgorithmFunctions[pfAlgorithm](startNode, targetNode, gridData);
                 const visitedArray = visualizedData[0];
                 const pathArray = visualizedData[1];
-
+                
                 visitedArray.unshift(startNode);
                 visitedArray.push(targetNode);
 
                 pathArray.push(startNode);
                 pathArray.unshift(targetNode);
                                     
-                await animateVisitedNodes(visitedArray, 0);
+                await animateVisitedNodes(visitedArray);
                 await animatePathNodes(pathArray, 30);
 
             } else {
@@ -111,7 +116,7 @@ const App = () => {
 
             element.classList.add("visited");
 
-            await new Promise(resolve => setTimeout(resolve, delay)); 
+            await new Promise(resolve => setTimeout(resolve, AlgoSpeedValue[refAlgoSpeed.current])); 
         }
     }
 
@@ -209,9 +214,9 @@ const App = () => {
             return;
         }
 
-        modifyNodeData(row, col, {
-            currentState: NodeState.Obstruction
-        });
+        // modifyNodeData(row, col, {
+        //     currentState: NodeState.Obstruction
+        // });
     }
     const getNodeFromState = (nodeState) => {
         for (let row = 0; row < BoardConfig.rows; row++){
@@ -223,18 +228,83 @@ const App = () => {
         }
     }
 
+    const handleAlgoSpeed = (speed) => {
+        setAlgoSpeed(speed);
+        refAlgoSpeed.current = speed;
+    }
+
+    const handleMouseDown = (row, col) => {
+        const clickedNodeData = gridData[row][col];
+    
+        const startNodeData = getNodeFromState(NodeState.Start);
+        if (startNodeData == null) {
+            if (clickedNodeData.currentState == NodeState.Target) {
+                return;
+            }
+            
+            modifyNodeData(row, col, {
+                currentState: NodeState.Start
+            });
+            return;
+        }
+
+        const targetNodeData = getNodeFromState(NodeState.Target);
+        if (targetNodeData == null) {
+            if (clickedNodeData.currentState == NodeState.Start) {
+                return;
+            }
+
+            modifyNodeData(row, col, {
+                currentState: NodeState.Target
+            });
+            return;
+        }
+
+        if (clickedNodeData.currentState == NodeState.Start || clickedNodeData.currentState == NodeState.Target) {
+            modifyNodeData(row, col, {
+                currentState: null
+            });
+            return;
+        }
+
+        modifyNodeData(row, col, {
+            currentState: NodeState.Obstruction
+        });
+
+        setIsMouseDown(true);
+    }
+
+    const handleMouseEnter = (row, col) => {
+        if (!isMouseDown) {
+            return;
+        }
+
+        modifyNodeData(row, col, {
+            currentState: NodeState.Obstruction
+        });
+    }
+
+    const handleMouseUp = () => {
+        setIsMouseDown(false);
+    }
+
     return (
         <MainTemplate>
             <Header 
                 handleSetPfAlgorithm={(algo) => setPfAlgorithm(algo)} 
                 handleSetMazeAlgorithm={(algo) => executeMazeAlgo(algo)}
+                handleSetSpeed={handleAlgoSpeed}
                 handleVisualizeButton={() => handleVisualize(true)}
                 handleClearButton={handleClearBoard}
                 currentPfAlgorithm={pfAlgorithm}
+                currentSpeed={algoSpeed}
             />
             <Board 
                 gridData={gridData}
                 handleNodeClick={handleNodeClick}
+                handleMouseDown = {handleMouseDown}
+                handleMouseEnter = {handleMouseEnter}
+                handleMouseUp = {handleMouseUp}
                 ref = {gridRef}
             />   
         </MainTemplate>
