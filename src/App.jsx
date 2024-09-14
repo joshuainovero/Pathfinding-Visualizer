@@ -7,6 +7,7 @@ import AlgoSpeed from './enums/algoSpeed.js';
 import AlgoSpeedValue from './utils/algoSpeedValue.js';
 import AlgorithmFunctions from './utils/algorithmFunctions.js';
 import BoardConfig from './configs/board.js'
+import recursiveBacktrack from './algorithms/recursiveBacktrack.js';
 
 const App = () => {
     const [pfAlgorithm, setPfAlgorithm] = useState();
@@ -21,7 +22,7 @@ const App = () => {
     const gridRef = useRef();
     gridRef.current = Array.from({length: BoardConfig.rows}, (_, row) =>
         Array.from({length: BoardConfig.cols}, (_, col) => useRef())
-    )
+    );
 
     useEffect(() => {
         setGridData(() => {
@@ -68,19 +69,49 @@ const App = () => {
             } else {
                 alert("Choose an algorithm!");
             }
-        
+
+
             handleVisualize(false);
         }
 
         asyncHandleVisualize();
     }, [visualizing]);
 
+    const executeMazeAlgo = () => {
+        updateNeighbors();
+
+        const mazeMap = recursiveBacktrack(gridData);
+
+        Array.from({length: BoardConfig.rows}, (_, row) =>
+            Array.from({length: BoardConfig.cols}, (_, col) => {
+
+                if (mazeMap.get(gridData[row][col])) {
+                    modifyNodeData(row, col, {
+                        currentState: null
+                    });
+                }
+                else {
+                    modifyNodeData(row, col, {
+                        currentState: NodeState.Obstruction
+                    });
+                }
+        }));
+
+        modifyNodeData(0, 0, {
+            currentState: NodeState.Start
+        });
+
+        modifyNodeData(26, 64, {
+            currentState: NodeState.Target
+        });
+    }
+
     const modifyNodeData = (row, col, data) => {
         setGridData(prevGridData => {
             prevGridData[row][col] = { ...prevGridData[row][col], ...data };
             return [...prevGridData]; 
         });
-    }
+    };
 
     const updateNeighbors = () => {
         const directions = [
@@ -105,7 +136,7 @@ const App = () => {
                 nodeData.neighbors = directions.map(dir => getNeighbor(rowIndex, colIndex, dir)).filter(Boolean);
             });
          });
-    }
+    };
 
 
     const animateVisitedNodes = async (visitedArray, delay) => {
@@ -118,7 +149,7 @@ const App = () => {
 
             await new Promise(resolve => setTimeout(resolve, AlgoSpeedValue[refAlgoSpeed.current])); 
         }
-    }
+    };
 
     const animatePathNodes = async (pathArray, delay) => {
         for (let i = pathArray.length - 1; i > 0; i--) {
@@ -131,7 +162,7 @@ const App = () => {
 
             await new Promise(resolve => setTimeout(resolve, delay)); 
         }
-    }
+    };
 
     const handleVisualize = (state) => {
         if (visualizing && state) {
@@ -144,7 +175,7 @@ const App = () => {
         }
 
         setVisualize(true);
-    } 
+    };
 
     const handleClearBoard = () => {
         if (visualizing){
@@ -152,7 +183,7 @@ const App = () => {
         }
 
         clearBoard();
-    }
+    };
 
     const clearVisualize = () => {
         Array.from({length: BoardConfig.rows}, (_, row) =>
@@ -178,7 +209,7 @@ const App = () => {
                     currentState: null
                 })
         }));
-    }
+    };
 
     const handleNodeClick = (row, col) => {
         const clickedNodeData = gridData[row][col];
@@ -214,10 +245,8 @@ const App = () => {
             return;
         }
 
-        // modifyNodeData(row, col, {
-        //     currentState: NodeState.Obstruction
-        // });
-    }
+    };
+
     const getNodeFromState = (nodeState) => {
         for (let row = 0; row < BoardConfig.rows; row++){
             for (let col = 0; col < BoardConfig.cols; col++){
@@ -226,12 +255,12 @@ const App = () => {
                 }
             }
         }
-    }
+    };
 
     const handleAlgoSpeed = (speed) => {
         setAlgoSpeed(speed);
         refAlgoSpeed.current = speed;
-    }
+    };
 
     const handleMouseDown = (row, col) => {
         const clickedNodeData = gridData[row][col];
@@ -268,11 +297,11 @@ const App = () => {
         }
 
         modifyNodeData(row, col, {
-            currentState: NodeState.Obstruction
+            currentState: gridData[row][col].currentState == NodeState.Obstruction ? null : NodeState.Obstruction
         });
 
         setIsMouseDown(true);
-    }
+    };
 
     const handleMouseEnter = (row, col) => {
         if (!isMouseDown) {
@@ -280,13 +309,13 @@ const App = () => {
         }
 
         modifyNodeData(row, col, {
-            currentState: NodeState.Obstruction
+            currentState: gridData[row][col].currentState == NodeState.Obstruction ? null : NodeState.Obstruction
         });
-    }
+    };
 
     const handleMouseUp = () => {
         setIsMouseDown(false);
-    }
+    };
 
     return (
         <MainTemplate>
@@ -308,7 +337,7 @@ const App = () => {
                 ref = {gridRef}
             />   
         </MainTemplate>
-    )
-}
+    );
+};
 
-export default App
+export default App;

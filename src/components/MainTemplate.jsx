@@ -3,7 +3,7 @@ const MainTemplate = ({ children }) => {
         <div className="wrapper">
             {children}
         </div>
-    )
-}
+    );
+};
 
-export default MainTemplate
+export default MainTemplate;

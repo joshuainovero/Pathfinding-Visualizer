@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Dropdown from './Dropdown.jsx';
 import Algorithms from '../enums/algorithms.js'
 import MazeAlgorithms from '../enums/mazeAlgorithms.js';
 import AlgoSpeed from '../enums/algoSpeed.js'
@@ -25,8 +26,10 @@ const Header = ({handleSetPfAlgorithm, handleSetMazeAlgorithm, handleSetSpeed, h
     const [displayedDropdowns, setDisplayedDropdowns] = useState({...templDropdowns});
 
     const handleDropdown = (dropdownName) => {
-        const dropDown = {...templDropdowns}
-        dropDown[dropdownName] = 'block'
+        const dropDown = {...templDropdowns};
+        if (displayedDropdowns[dropdownName] == 'none')
+            dropDown[dropdownName] = 'block';
+       
         setDisplayedDropdowns(dropDown);
     }
 
@@ -44,29 +47,25 @@ const Header = ({handleSetPfAlgorithm, handleSetMazeAlgorithm, handleSetSpeed, h
             <div className="options">
                 <ul>
                     <li>
-                        <button onClick={() => handleDropdown('pathfinding')} id="choose-algorithm">
+                        <button onClick={() => handleDropdown('pathfinding')}>
                             {pfDisplayNames[currentPfAlgorithm] || "Choose Algorithm"} <i className="fa fa-caret-down"></i>
-                            <div className="drop-down" style={{display: displayedDropdowns.pathfinding}}>
-                                <ul>
-                                    {Object.keys(Algorithms).map((algo) => 
-                                    <li onClick={() => handleSetPfAlgorithm(algo)} key={algo}>
-                                        {pfDisplayNames[algo]}
-                                    </li>)}
-                                </ul>
-                            </div>
+                            <Dropdown displayStyle={displayedDropdowns.pathfinding}>
+                                {Object.keys(Algorithms).map((algo) => 
+                                <li onClick={() => handleSetPfAlgorithm(algo)} key={algo}>
+                                    {pfDisplayNames[algo]}
+                                </li>)}   
+                            </Dropdown>
                         </button>
                     </li>
                     <li>
-                        <button onClick={() => handleDropdown('maze')} id="choose-maze-algorithm"> 
+                        <button onClick={() => handleDropdown('maze')}> 
                             Generate Maze <i className="fa fa-caret-down"></i>
-                            <div className="drop-down" style={{display: displayedDropdowns.maze}}>
-                                    <ul>
-                                        {Object.keys(MazeAlgorithms).map((algo) => 
-                                        <li onClick={() => handleSetMazeAlgorithm(algo)} key={algo}>
-                                            {mazeDisplayNames[algo]}
-                                        </li>)}
-                                    </ul>
-                            </div>
+                                <Dropdown displayStyle={displayedDropdowns.maze}>     
+                                    {Object.keys(MazeAlgorithms).map((algo) => 
+                                    <li onClick={() => handleSetMazeAlgorithm(algo)} key={algo}>
+                                        {mazeDisplayNames[algo]}
+                                    </li>)}
+                                </Dropdown>
                         </button>
                     </li>
                     <li>
@@ -78,21 +77,19 @@ const Header = ({handleSetPfAlgorithm, handleSetMazeAlgorithm, handleSetSpeed, h
                     <li>
                         <button onClick={() => handleDropdown('speed')} id="choose-speed">
                             {currentSpeed && `Speed: ${currentSpeed}` || "Speed"} <i className="fa fa-caret-down"></i>
-                            <div className="drop-down" style={{display: displayedDropdowns.speed}}>
-                                    <ul>
-                                        {Object.keys(AlgoSpeed).map((algo) => 
-                                        <li onClick={() => handleSetSpeed(algo)} key={algo}>
-                                            {algo}
-                                        </li>)}
-                                    </ul>
-                            </div>
+                                <Dropdown displayStyle={displayedDropdowns.speed}>
+                                    {Object.keys(AlgoSpeed).map((algo) => 
+                                    <li onClick={() => handleSetSpeed(algo)} key={algo}>
+                                        {algo}
+                                    </li>)}
+                                </Dropdown>
                         </button>
                     </li>
 
                 </ul>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Header
+export default Header;

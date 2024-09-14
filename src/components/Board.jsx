@@ -23,4 +23,4 @@ const Board = forwardRef( (props, ref) => {
     )
 })
 
-export default Board
+export default Board;

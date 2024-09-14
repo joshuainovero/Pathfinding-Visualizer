@@ -109,6 +109,11 @@
     color:#7eb91e
 }
 
+#Play:hover {
+    color: white;
+    background-color: #5cbf4d71;
+}
+
 .options i {
     font-weight: bold;
 }
