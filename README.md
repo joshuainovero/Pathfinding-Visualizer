@@ -14,11 +14,11 @@ To move the starting and target nodes, right-click on them and drag them to your
 
 ### Adding and Removing Walls
 
-Click on any white tile to add a wall (obstacle) at that location. To remove a wall, simply right-click on it. If you need to clear multiple obstacles or reset the grid, use the "Clear Walls" button.
+Click on any white tile to add a wall (obstacle) at that location. To remove a wall, simply right-click on it. If you need to clear multiple obstacles or reset the grid, use the "Clear" button.
 
 ### Selecting an Algorithm
 
-By default, the A* algorithm is selected. To explore other algorithms, click on the boxes in the left panel to switch between available options.
+By default, the A* algorithm is selected. To explore other algorithms, click on the drop down at the header to switch between available options.
 
 ### Start the Visualization
 
