@@ -52,20 +52,25 @@ const App = () => {
 
                 const startNode = getNodeFromState(NodeState.Start)
                 const targetNode = getNodeFromState(NodeState.Target)
-
+                
                 const visualizedData = AlgorithmFunctions[pfAlgorithm](startNode, targetNode, gridData);
                 const visitedArray = visualizedData[0];
                 const pathArray = visualizedData[1];
+
+                if (pathArray == null) {
+                    alert("There's no path!");
+                }
+                else {
+                    visitedArray.unshift(startNode);
+                    visitedArray.push(targetNode);
+    
+                    pathArray.push(startNode);
+                    pathArray.unshift(targetNode);
+                                        
+                    await animateVisitedNodes(visitedArray);
+                    await animatePathNodes(pathArray, 30);    
+                }
                 
-                visitedArray.unshift(startNode);
-                visitedArray.push(targetNode);
-
-                pathArray.push(startNode);
-                pathArray.unshift(targetNode);
-                                    
-                await animateVisitedNodes(visitedArray);
-                await animatePathNodes(pathArray, 30);
-
             } else {
                 alert("Choose an algorithm!");
             }
