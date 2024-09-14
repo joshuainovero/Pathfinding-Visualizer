@@ -1,39 +1,39 @@
 # Pathfinding Visualizer
 
-Visualize common pathfinding algorithms through dynamic animations using this application!
+Easily visualize popular pathfinding algorithms with this interactive tool!
 
 ## What is Pathfinding?
 
-In computer science, pathfinding refers to the process of finding the shortest or most efficient route between two points. Graphs are essential to pathfinding algorithms, serving as the environment through which we navigate. The type of algorithm used determines how the graph is traversed and how the shortest path is found.
+Pathfinding is a technique in computer science used to determine the most efficient route between two points, typically within a graph. A graph consists of nodes (points) and edges (connections between points), and different pathfinding algorithms are used to explore these connections in unique ways.
 
 ## How to Use
 
-### Setting the Starting and Target Nodes
+### Setting the Start and Target Nodes
 
-To reposition the starting node and target node from their default locations, simply right-click and drag them to your desired position on the board.
+To move the starting and target nodes, right-click on them and drag them to your desired location on the grid.
 
-### Adding and Deleting Walls
+### Adding and Removing Walls
 
-White tiles on the board are available for placing wall nodes. To delete a wall, right-click on any obstructed tile. If you’ve placed too many obstacles or created a maze, you can clear all walls with a button press.
+Click on any white tile to add a wall (obstacle) at that location. To remove a wall, simply right-click on it. If you need to clear multiple obstacles or reset the grid, use the "Clear Walls" button.
 
-### Choosing an Algorithm
+### Selecting an Algorithm
 
-The A* algorithm is selected by default. You can choose a different algorithm by clicking one of the boxes in the left panel.
+By default, the A* algorithm is selected. To explore other algorithms, click on the boxes in the left panel to switch between available options.
 
-### Visualize!
+### Start the Visualization
 
-Once you’ve set your configurations, press the "Visualize" button at the top-center of the screen to see the algorithm in action.
+Once you've configured your grid and selected an algorithm, press the "Visualize" button at the top-center of the screen to start the animation and see the algorithm in action.
 
 ## Available Algorithms
 
-- **A\* Search**: The A* algorithm extends the principles of Dijkstra’s shortest path algorithm by introducing a heuristic to prioritize which nodes to evaluate next. This makes it more efficient in finding the shortest path between two points.
+- **A\* Search**: A* is a popular pathfinding algorithm that extends Dijkstra’s algorithm by adding a heuristic, helping the search process prioritize certain nodes to reach the goal faster.
   
-- **Dijkstra's Algorithm**: Dijkstra’s algorithm finds the shortest path from a starting node to a target node in a weighted graph. It works by constructing a tree of shortest paths from the source node to all other points.
+- **Dijkstra’s Algorithm**: Dijkstra’s algorithm guarantees the shortest path in a weighted graph by exploring nodes in order of increasing distance from the starting node.
 
-- **Breadth-First Search**: BFS is a fundamental graph traversal algorithm that explores all neighboring nodes at the present depth before moving on to nodes at the next depth level. It only works on unweighted graphs.
+- **Breadth-First Search (BFS)**: BFS explores nodes layer by layer, starting from the source and visiting all neighboring nodes before moving outward. It is only applicable to unweighted graphs.
 
-- **Depth-First Search**: DFS explores as far as possible along a path before backtracking. While it is fast for some cases, it is not optimal for finding the shortest path and works only on unweighted graphs.
+- **Depth-First Search (DFS)**: DFS explores as far down a branch as possible before backtracking. While useful in some cases, it is not ideal for finding the shortest path and works only for unweighted graphs.
 
-## Maze Algorithms
+## Maze Generation Algorithm
 
-- **Recursive Backtracker**: A randomized version of the depth-first search algorithm, generating a perfect maze with no inaccessible areas or loops.
+- **Recursive Backtracker**: This algorithm uses a randomized version of depth-first search to generate mazes. The result is a perfect maze with no loops or inaccessible areas.
