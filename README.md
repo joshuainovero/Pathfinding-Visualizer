@@ -12,7 +12,7 @@ Pathfinding is a technique in computer science used to determine the most effici
 
 To move the starting and target nodes, right-click on them and drag them to your desired location on the grid.
 
-### Adding and Removing Walls
+### Adding and Removing Obstructions
 
 Click on any white tile to add a wall (obstacle) at that location. To remove a wall, simply right-click on it. If you need to clear multiple obstacles or reset the grid, use the "Clear" button.
 
